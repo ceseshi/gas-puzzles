@@ -25,7 +25,11 @@ contract OptimizedVote {
     /// Write only non-zero values to storage
     function createProposal(bytes32 _name) external {
         proposals[proposalsLength].name = _name;
-        proposalsLength += 1;
+
+        /// This won't overflow
+        unchecked {
+            proposalsLength += 1;
+        }
     }
 
     function vote(uint8 _proposal) external {
@@ -34,7 +38,10 @@ contract OptimizedVote {
         voters[msg.sender].vote = _proposal;
         voters[msg.sender].voted = true;
 
-        proposals[_proposal].voteCount += 1;
+        /// This won't overflow
+        unchecked {
+            proposals[_proposal].voteCount += 1;
+        }
     }
 
     function getVoteCount(uint8 _proposal) external view returns (uint8) {
